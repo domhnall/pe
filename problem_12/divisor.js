@@ -13,6 +13,14 @@ var DIVISOR = (function(d) {
     return divisors;
   };
 
+  d.get_proper_divisors = function(n) {
+    let proper_divisors = d.get_divisors(n),
+        index = proper_divisors.indexOf(n);
+
+    proper_divisors.splice(index,1);
+    return proper_divisors;
+  };
+
   return d;
 })(DIVISOR || {});
 
