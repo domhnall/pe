@@ -21,7 +21,20 @@ var DIVISOR = (function(d) {
     return proper_divisors;
   };
 
+  let sum_proper_divisors = function(n) {
+    return d.get_proper_divisors(n).reduce((prev,cur)=>{return prev+cur;}, 0);
+  };
+
+  d.is_abundant = function(n){
+    return n < sum_proper_divisors(n);
+  };
+
+  d.is_perfect = function(n) {
+    return n === sum_proper_divisors(n);
+  };
+
   return d;
+
 })(DIVISOR || {});
 
 module.exports = DIVISOR;
