@@ -2,6 +2,7 @@ var PRIME = (function(p) {
   "use strict";
 
   p.is_prime = function(val) {
+    if(val<0){ return false; }
     let half = Math.floor(val/2)+1;
     for(let i = 2; i<half; i++) {
       if(val%i===0){
