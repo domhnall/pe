@@ -1,39 +1,36 @@
 (function(){
   "use strict";
-  //const LIMIT = 28123;
-  const LIMIT = 2000;
+  const LIMIT = 28123;
 
-  let divisor = require('../problem_12/divisor');
+  require('../problem_21/array_utils').init();
+  let is_abundant = require('../problem_12/divisor').is_abundant;
   let abundants = [];
-  let qualifying_numbers = [];
 
-  let is_sum_of_two_abundant_numbers = function(n) {
-    let len = abundants.length;
-    outer: for(let i=0; i<len; i++) {
+  let abundant_sums = function(n) {
+    let len = abundants.length,
+        abundant_sums = [],
+        sum = 0;
+    for(let i=0; i<len; i++) {
       inner: for(let j=i; j<len; j++) {
-        let sum = abundants[i]+abundants[j];
-        if(sum===n){
-          return true;
-        } else if(sum>n) {
+        if((abundants[i]+abundants[j])>LIMIT) {
           break inner;
+        } else {
+          abundant_sums.push(abundants[i]+abundants[j]);
         }
       }
     }
-    return false;
+    return abundant_sums.unique().reduce((prev,cur)=>{ return prev+cur; }, 0);
+  };
+
+  let sum_to_n = function(n) {
+    return (1+n)*n/2;
   };
 
   for(let i=0; i<=LIMIT; i++) {
-    if(!is_sum_of_two_abundant_numbers(i)){
-      qualifying_numbers.push(i);
-    }
-    if(divisor.is_abundant(i)){
+    if(is_abundant(i)){
       abundants.push(i);
     }
   }
 
-  console.log(`qualifying numbers ${qualifying_numbers}`);
-  console.log(`abundants ${abundants}`);
-
-  let ans = qualifying_numbers.reduce((prev, cur)=>{ return prev+cur; }, 0);
-  console.log(`Sum of qualifying numbers: ${ans}`);
+  console.log(`Sum of qualifying numbers: ${sum_to_n(LIMIT)-abundant_sums()}`);
 }());
