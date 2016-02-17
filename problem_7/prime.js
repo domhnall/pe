@@ -33,6 +33,25 @@ var PRIME = (function(p) {
     }
   };
 
+  p.next_prime = function(num) {
+    if(!cached_primes){
+      init_primes_cache(10000);
+    }
+    let index = cached_primes.indexOf(num);
+    if(index>=0 && index<(cached_primes.length-1)){
+      return cached_primes[index+1];
+    }
+    prime_test: for(let i=(num+1);; i++) {
+      for(let j=0, len=cached_primes.length; j<len; j++) {
+        if(i%cached_primes[j]===0){
+          continue prime_test;
+        }
+      }
+      cached_primes.push(i);
+      return i;
+    }
+  };
+
   return p;
 })(PRIME || {});
 
