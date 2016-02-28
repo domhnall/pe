@@ -34,13 +34,27 @@ var PRIME = (function(p) {
   };
 
   p.next_prime = function(num) {
+    // Initialise the prime cache
     if(!cached_primes){
       init_primes_cache(10000);
     }
+
+    // Search for this number in the prime cache
     let index = cached_primes.indexOf(num);
     if(index>=0 && index<(cached_primes.length-1)){
       return cached_primes[index+1];
     }
+
+    // If we already have the prime in the cache and we just need to locate it
+    if(num<cached_primes[cached_primes.length-1]) {
+      for(let i=0, len=cached_primes.length; i< len; i++) {
+        if(num<cached_primes[i]){
+          return cached_primes[i];
+        }
+      }
+    }
+
+    // If the next prime is outside our cache
     prime_test: for(let i=(num+1);; i++) {
       for(let j=0, len=cached_primes.length; j<len; j++) {
         if(i%cached_primes[j]===0){

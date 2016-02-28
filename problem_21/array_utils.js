@@ -14,7 +14,23 @@ var ARRAY_UTILS = (function(ar){
         }
       }
       return arr;
-    }
+    };
+
+    Array.prototype.equals = function(array){
+      if(!array){ return false; }
+      if(this.length!==array.length){ return false; }
+      for(let i=0, len=this.length; i<len; i++){
+        if(this[i] instanceof Array && array[i] instanceof Array) {
+          if(!this[i].equals(array[i])){
+            return false;
+          }
+        }
+        if(this[i]!=array[i]) {
+          return false;
+        }
+      }
+      return true;
+    };
   };
 
   return ar;
