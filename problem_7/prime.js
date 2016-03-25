@@ -15,7 +15,7 @@ var PRIME = (function(p) {
   let cached_primes = null;
   let init_primes_cache = function(limit) {
     cached_primes = [2];
-    for(let i = 3; i<10000; i++) {
+    for(let i = 3; i<limit; i++) {
       if(p.is_prime(i)) {
         cached_primes.push(i);
       }
