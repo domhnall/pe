@@ -66,6 +66,19 @@ var PRIME = (function(p) {
     }
   };
 
+  let big_cache = {1: [1]};
+  p.prime_factorization = function prime_factorization(num){
+    if(big_cache[num]){ return big_cache[num]; }
+    let prime = 2;
+    do {
+      if(num===prime){
+        return (big_cache[num] = [prime]);
+      }else if(num%prime===0){
+        return (big_cache[num] = [prime].concat(prime_factorization(num/prime)));
+      }
+    } while((prime=p.next_prime(prime))<=num);
+  };
+
   return p;
 })(PRIME || {});
 

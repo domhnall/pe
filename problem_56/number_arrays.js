@@ -28,7 +28,6 @@ var NUMBER_ARRAYS = (function(na){
         result  = [],
         carried = 0;
 
-
     if(a_rev.length<b_rev.length){
       a_rev = a_rev.concat(array_of_n(b_rev.length-a_rev.length));
     }else if(b_rev.length<a_rev.length){
@@ -40,6 +39,31 @@ var NUMBER_ARRAYS = (function(na){
       carried = Math.floor((a_rev[i]+b_rev[i]+carried)/10);
     }
     if(carried>0){ result.push(carried); }
+
+    return result.reverse();
+  };
+
+  na.array_difference = function(a,b){
+    let a_rev   = a.slice().reverse(),
+        b_rev   = b.slice().reverse(),
+        result  = [],
+        carried = 0;
+
+    if(a_rev.length<b_rev.length){
+      a_rev = a_rev.concat(array_of_n(b_rev.length-a_rev.length));
+    }else if(b_rev.length<a_rev.length){
+      b_rev = b_rev.concat(array_of_n(a_rev.length-b_rev.length));
+    }
+
+    for(let i=0, a_len=a_rev.length; i<a_len; i++) {
+      result[i] = (a_rev[i]-b_rev[i]-carried);
+      carried = 0;
+      if(result[i]<0){
+        result[i]+=10;
+        carried = 1;
+      }
+    }
+    if(carried>0){ result[a_rev.length-1]-=10; }
 
     return result.reverse();
   };
