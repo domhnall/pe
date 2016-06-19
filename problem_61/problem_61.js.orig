@@ -1,0 +1,87 @@
+(function(){
+  "use strict";
+  require('../problem_21/array_utils.js').init();
+  const permutations = require('../problem_41/permutations').permutations;
+
+  const MIN = 999, MAX = 10000;
+
+  let get_polygonals = function(generator){
+    let i    = 0,
+        term = 0,
+        nums = [];
+    main: while(true){
+      let term = generator(++i);
+      if(term>MAX){ break main; }
+      if(term>MIN && term<MAX){
+        nums.push(term);
+      }
+    }
+    return nums;
+  };
+
+  let preliminary_cyclic_check = function(array){
+    let parts = array.map((el)=>{ return [(''+el).split('').slice(0,2).join(''), (''+el).split('').slice(2).join('')]; }),
+        first_parts = parts.map((el)=>{ return el[0]; }),
+        second_parts = parts.map((el)=>{ return el[1]; });
+    for(let i=0, len=parts.length; i<len; i++) {
+      if(!first_parts.contains(second_parts[i]) || !second_parts.contains(first_parts[i])){ return false; }
+    }
+    return true;
+  };
+
+  let find_cyclic_permutation = function(array){
+    let perms = permutations(array);
+    for(let i=0, len=perms.length; i<len; i++){
+      if(is_cyclic(perms[i])) { return perms[i]; }
+    }
+    return false;
+  };
+
+  let is_cyclic = function(array){
+    return array.reduce(function(p,c,i,a){
+      let next_index = (i+1)%a.length,
+          prev_index = (i-1)<0 ? a.length+(i-1) : (i-1);
+      return p &&
+             (''+c).split('').slice(2).join('')===(''+array[next_index]).split('').slice(0,2).join('') &&
+             (''+c).split('').slice(0,2).join('')===(''+array[prev_index]).split('').slice(2).join('');
+    }, true);
+  };
+
+  const GENERATORS = [ (i)=>{ return i*(i+1)/2; },
+                       (i)=>{ return i*i; },
+                       (i)=>{ return i*(3*i-1)/2; },
+                       (i)=>{ return i*(2*i-1); },
+                       (i)=>{ return i*(5*i-3)/2; },
+                       (i)=>{ return i*(3*i-2); } ];
+
+  const POLYGONAL_NUMBERS = GENERATORS.map((g)=>{ return get_polygonals(g); });
+
+  let ans = [];
+  outer: for(let i=0, len_tri=POLYGONAL_NUMBERS[0].length; i<len_tri; i++) {
+    console.log(`Outer loop ${POLYGONAL_NUMBERS[0][i]}`);
+    for(let j=0, len_square=POLYGONAL_NUMBERS[1].length; j<len_square; j++) {
+      for(let k=0, len_pent=POLYGONAL_NUMBERS[2].length; k<len_pent; k++) {
+        for(let l=0, len_hex=POLYGONAL_NUMBERS[3].length; l<len_hex; l++) {
+          for(let m=0, len_hep=POLYGONAL_NUMBERS[4].length; m<len_hep; m++) {
+            for(let n=0, len_oct=POLYGONAL_NUMBERS[5].length; n<len_oct; n++) {
+              let test = [ POLYGONAL_NUMBERS[0][i],
+                           POLYGONAL_NUMBERS[1][j],
+                           POLYGONAL_NUMBERS[2][k],
+                           POLYGONAL_NUMBERS[3][l],
+                           POLYGONAL_NUMBERS[4][m],
+                           POLYGONAL_NUMBERS[5][n] ];
+              if(!preliminary_cyclic_check(test)){
+                continue;
+              }
+              if(find_cyclic_permutation(test)){
+                ans=find_cyclic_permutation(test);
+                break outer;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  console.log(`Answer ${ans.reduce((p,c)=>{ return p+c; }, 0)}`);
+}());
